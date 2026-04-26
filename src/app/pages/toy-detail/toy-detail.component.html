@@ -1,0 +1,94 @@
+@if (toy$ | async; as toy) {
+  <div class="max-w-[1200px] mx-auto px-6 my-8 text-[#333]">
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-16 bg-white/70 backdrop-blur-md rounded-[24px] p-6 md:p-12 shadow-2xl shadow-black/5 border border-white/30">
+      <div class="flex items-center justify-center bg-slate-50 rounded-[20px] p-8 overflow-hidden group">
+        <img 
+          [src]="'https://toy.pequla.com' + toy.imageUrl" 
+          [alt]="toy.name" 
+          class="w-full h-auto object-contain transition-transform duration-500 group-hover:scale-105"
+        >
+      </div>
+
+      <div class="flex flex-col">
+        <div class="flex flex-wrap gap-3 mb-6">
+          <span class="px-4 py-1.5 rounded-full text-[0.7rem] font-bold uppercase tracking-wider bg-blue-100 text-blue-800">
+            {{ toy.type.name }}
+          </span>
+          <span class="px-4 py-1.5 rounded-full text-[0.7rem] font-bold uppercase tracking-wider bg-amber-100 text-amber-800">
+            Uzrast: {{ toy.ageGroup.name }}
+          </span>
+        </div>
+
+        <h1 class="text-3xl md:text-5xl font-black mb-4 text-gray-900 leading-tight">
+          {{ toy.name }}
+        </h1>
+        
+        <p class="text-3xl font-extrabold text-indigo-600 mb-8">
+          {{ toy.price | number:'1.2-2' }} RSD
+        </p>
+
+        <div class="mb-8">
+          <p class="text-gray-600">
+            {{ toy.description }}
+          </p>
+        </div>
+
+        <div class="border-y border-gray-100 py-6 mb-10 space-y-2">
+          <div class="text-[0.95rem]">
+            <strong class="text-gray-900">Proizvedeno:</strong> 
+            <span class="text-gray-600 ml-1">{{ toy.productionDate | date:'mediumDate' }}</span>
+          </div>
+          <div class="text-[0.95rem]">
+            <strong class="text-gray-900">Namenjeno za:</strong> 
+            <span class="text-gray-600 ml-1">{{ toy.targetGroup | titlecase }}</span>
+          </div>
+        </div>
+
+        <div class="mt-auto">
+          <button 
+            (click)="addToCart(toy)"
+            class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-5 px-8 rounded-2xl text-lg font-bold cursor-pointer transition-all duration-300 shadow-xl flex items-center justify-center gap-3 group"
+          >
+            Rezerviši igračku
+          </button>
+        </div>
+      </div>
+    </div>
+
+    @if (toy.reviews && toy.reviews.length > 0) {
+      <div class="mt-24">
+        <h2 class="text-3xl font-black mb-12 text-center text-gray-900">Recenzije kupaca</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          @for (review of toy.reviews; track review.authorId) {
+            <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-100 hover:shadow-md transition-shadow duration-300">
+              <div class="flex justify-between items-start mb-6">
+                <div class="flex flex-col gap-1">
+                  <span class="font-bold text-gray-900 text-lg leading-tight">
+                    {{ getAuthorName(review.authorId) }}
+                  </span>
+                  <div class="flex gap-0.5">
+                    @for (star of [1,2,3,4,5]; track star) {
+                      <span [class]="star <= review.rating ? 'text-amber-400' : 'text-gray-200'" class="text-lg">★</span>
+                    }
+                  </div>
+                </div>
+                <span class="text-xs font-medium text-gray-400 uppercase tracking-tighter">
+                  {{ review.date | date:'mediumDate' }}
+                </span>
+              </div>
+              <p class="italic text-gray-600 leading-relaxed">
+                "{{ review.comment }}"
+              </p>
+            </div>
+          }
+        </div>
+      </div>
+    }
+  </div>
+} @else {
+  <div class="flex flex-col items-center justify-center min-h-[400px]">
+    <div class="w-16 h-16 border-4 border-slate-100 border-t-blue-600 rounded-full animate-spin mb-6"></div>
+    <p class="text-gray-500 font-medium animate-pulse text-lg">Učitavanje igračke...</p>
+  </div>
+}
