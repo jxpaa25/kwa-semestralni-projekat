@@ -7,8 +7,6 @@ import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
 import { Toy } from '../../../db/toys.db';
 import { users } from '../../../db/users.db';
-import { Observable } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-toy-detail',
@@ -23,15 +21,13 @@ export class ToyDetailComponent implements OnInit {
   private cartService = inject(CartService);
   private authService = inject(AuthService);
 
-  toy$!: Observable<Toy | undefined>;
+  toy: Toy | undefined;
 
   ngOnInit(): void {
-    this.toy$ = this.route.paramMap.pipe(
-      switchMap(params => {
-        const permalink = params.get('permalink');
-        return this.toyService.getToyByPermalink(permalink || '');
-      })
-    );
+    this.route.paramMap.subscribe(params => {
+      const permalink = params.get('permalink');
+      this.toy = this.toyService.getToyByPermalink(permalink || '');
+    });
   }
 
   addToCart(toy: Toy): void {

@@ -12,7 +12,6 @@ export interface CartItem {
 export class CartService {
   cartItems = signal<CartItem[]>([]);
 
-  // Selectors
   public items = computed(() => this.cartItems());
   public totalItems = computed(() => this.cartItems().reduce((acc, item) => acc + item.quantity, 0));
   public totalPrice = computed(() => this.cartItems().reduce((acc, item) => acc + (item.toy.price * item.quantity), 0));

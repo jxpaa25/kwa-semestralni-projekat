@@ -1,19 +1,15 @@
-import { Injectable, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { Toy, toys } from '../../db/toys.db';
-import { Observable, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ToyService {
-  private http = inject(HttpClient);
-
-  getToys(): Observable<Toy[]> {
-    return of(toys);
+  getToys(): Toy[] {
+    return toys;
   }
 
-  getToyByPermalink(permalink: string): Observable<Toy | undefined> {
-    return of(toys.find(t => t.permalink === permalink));
+  getToyByPermalink(permalink: string): Toy | undefined {
+    return toys.find(t => t.permalink === permalink);
   }
 }

@@ -20,7 +20,6 @@ export class HomeComponent implements OnInit {
   currentPage = signal<number>(1);
   pageSize = 10;
 
-  // Search/Filter signals
   searchName = signal<string>('');
   searchDesc = signal<string>('');
   searchType = signal<string>('');
@@ -33,7 +32,6 @@ export class HomeComponent implements OnInit {
   searchRatingMin = signal<number | null>(null);
   searchRatingMax = signal<number | null>(null);
 
-  // Extract unique options for selects
   uniqueTypes = computed(() => {
     const types = new Set(this.toys().map(t => t.type.name));
     return Array.from(types).sort();
@@ -102,9 +100,7 @@ export class HomeComponent implements OnInit {
   totalPages = computed(() => Math.ceil(this.filteredToys().length / this.pageSize));
 
   ngOnInit(): void {
-    this.toyService.getToys().subscribe(data => {
-      this.toys.set(data);
-    });
+    this.toys.set(this.toyService.getToys());
   }
 
   nextPage(): void {
