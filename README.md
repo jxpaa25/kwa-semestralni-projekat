@@ -1,24 +1,23 @@
 # KwaToystore
 
-KwaToystore is a single-page toy-store catalog built with Angular 21. Visitors can browse a catalog of 30 toys, filter it by name, description, type, age group, target group, production date, price and average rating, open a detail page with customer reviews, and, once registered and logged in, add toys to a cart, adjust quantities and edit their profile. The app is fully client-side: the toy and user data are TypeScript arrays bundled with the app, and the session and cart are persisted in `localStorage`. The user interface is in Serbian.
+KwaToystore is a toy store catalog written in Angular 21. It has 30 toys that you can search and filter, a detail page for each one with customer reviews, and, once you register and log in, a cart and a profile page. Everything runs in the browser. The toys and the users are TypeScript arrays shipped with the app, and the session and the cart are kept in `localStorage`. The interface is in Serbian.
 
-## Features
+## What it does
 
-- Catalog with 11 combinable filters (text search on name and description, toy type, age group, target group, production date range, price range, average rating range) and pagination, 10 items per page
-- Toy detail page with price and date formatting, and a list of customer reviews with author name and star rating
-- Registration with a favourite-toy-types checkbox group, and automatic login after registering
-- Login and logout, with the session restored on reload
-- Profile page that reuses the registration form in edit mode (email is read-only, password change is optional)
-- Cart with quantity controls, per-line and total price, persisted across reloads
-- `/profile` and `/cart` are protected by a route guard
-- Header with cart badge showing the number of items
+The catalog page has eleven filters that can be combined: text search on the name and on the description, toy type, age group, target group, a production date range, a price range and an average rating range. Results are paged ten at a time.
 
-Known limitations, by design of the assignment:
+Each toy has a detail page with the formatted price and production date and a list of reviews, each with the author's name and a star rating. The button on that page adds the toy to the cart, or sends you to the login page if you are not logged in.
 
-- There is no backend. New registrations and profile edits live in memory and are lost on reload, except for the currently logged-in user, whose session is stored in `localStorage`.
-- Checkout only confirms the order with a browser alert and empties the cart. No order is recorded.
-- Reviews are read-only seed data.
-- Toy images are served from an external host.
+Registration asks for name, contact details, a password and a set of favourite toy types (a checkbox group). A new user is logged in straight away. Login and logout work as you would expect, and the session survives a page reload. The profile page is the same form in edit mode: the email field is read only and the password is only changed if you type a new one.
+
+The cart shows each line with quantity controls and a line total, plus the overall total. It is stored in `localStorage`, so it is still there after a reload. The header shows a badge with the number of items. The profile and cart routes are behind a route guard.
+
+Some things are deliberately left simple, because this was a course assignment:
+
+- There is no backend. New accounts and profile edits are held in memory and disappear on reload, apart from the logged-in user, whose session is saved.
+- Checkout shows a browser alert and empties the cart. Nothing is recorded.
+- Reviews are seed data and cannot be written from the app.
+- Toy images come from an external host.
 
 ## Tech stack
 
@@ -31,18 +30,18 @@ Known limitations, by design of the assignment:
 | Vitest (through `@angular/build`) | ^4.0.8 |
 | RxJS | ~7.8.0 |
 
-## Angular concepts used
+## Angular features used
 
-- **Standalone components** with lazy-loaded routes (`loadComponent`)
-- **Signals** for all application state: `signal`, `computed` and `update`. The catalog filters and pagination are a chain of computed signals.
-- **Dependency injection** with `inject()` and root-provided services (`AuthService`, `CartService`, `ToyService`)
-- **Functional route guard** (`CanActivateFn`) on the profile and cart routes
-- **Reactive forms** with `FormBuilder`, `Validators`, a `FormArray` for the checkbox group, and validators that change between register and edit mode
-- **Template-driven binding** with `ngModel` wired to signals for the catalog filters
-- **Route parameters** (`/toy/:permalink`) read through `ActivatedRoute`
-- **Built-in control flow** (`@if`, `@for`) and **built-in pipes** (`date`, `number`, `titlecase`)
-- **Angular Material 3 theming** with `mat.theme()` and Material Icons, alongside Tailwind utility classes
-- **Unit tests** with Vitest and `TestBed` for the services, the guard and the main components
+- Standalone components and lazy loaded routes with `loadComponent`
+- Signals for all application state. The catalog filters and the pagination are a chain of `computed` signals.
+- `inject()` and services provided in root: `AuthService`, `CartService` and `ToyService`
+- A functional `CanActivateFn` guard on the profile and cart routes
+- Reactive forms with `FormBuilder`, `Validators` and a `FormArray` for the checkbox group. The password validators differ between register and edit mode.
+- `ngModel` bound to signals for the catalog filters
+- A route parameter (`/toy/:permalink`) read through `ActivatedRoute`
+- The `@if` and `@for` control flow and the `date`, `number` and `titlecase` pipes
+- Angular Material 3 theming with `mat.theme()` and Material Icons, next to Tailwind utility classes
+- Unit tests with Vitest and `TestBed` for the services, the guard and the main components
 
 ## Project structure
 
@@ -59,20 +58,20 @@ src/
     users.db.ts             User type and seed users
 ```
 
-## Getting started
+## Running it
 
-Requires Node.js 20 or newer and npm.
+You need Node.js 20 or newer and npm.
 
 ```bash
 npm install
 npm start
 ```
 
-Open `http://localhost:4200/`. The app reloads on file changes.
+Then open `http://localhost:4200/`. The app reloads when you change a file.
 
-Seed accounts for logging in are listed in `src/db/users.db.ts`, for example `petar@petrovic.com` / `petar123`.
+The seed accounts are in `src/db/users.db.ts`. One of them is `petar@petrovic.com` with the password `petar123`.
 
-### Other commands
+Other commands:
 
 ```bash
 npm run build            # production build into dist/kwa-toystore/browser
@@ -82,8 +81,8 @@ npx ng test --watch=false
 
 ## Deployment
 
-The production build is a static site. A `vercel.json` is included with the build command, output directory and a single-page-app rewrite so that deep links such as `/toy/drvena-slagalica-zivotinje` resolve to `index.html`.
+The production build is a static site. The repo includes a `vercel.json` with the build command, the output directory and a rewrite that sends every path to `index.html`, so a deep link like `/toy/drvena-slagalica-zivotinje` still loads.
 
-## Licence
+## Background
 
-Semester project for the Klijentske veb aplikacije (Client-side web applications) course.
+Semester project for the course Klijentske veb aplikacije (client-side web applications).
